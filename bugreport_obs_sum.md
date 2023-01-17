@@ -1,4 +1,4 @@
-[Obfuscator] Renaming constant variable in class static block
+[Obfuscator] Renaming constant variable in class static block (Summarized version)
 ==========================================
 ```JavaScript
 class x { static { const x = { x } = 0 ; } }
@@ -12,7 +12,7 @@ class x{static{const _0x4ecb98={x}=0x0;}}
 ```
 
 In summary, the bug has arised due to renaming constant variable in class static block.
-1. Original code and obfuscated code both evaluates `{ x } = 0` and `{x}=0x0` to initalize `x` in `x = { x } = 0` and `_0x4ecb98` in `_0x4ecb98={x}=0x0`.
+1. Original code and obfuscated code both evaluates `{ x } = 0` and `{x}=0x0` to initialize `x` in `x = { x } = 0` and `_0x4ecb98` in `_0x4ecb98={x}=0x0`.
 2. When resolving `x` in `{x}`, the original code resolves to `x` in `const x` and the obfuscated code resolves to `x` in `class x`.
 3. The **ReferenceError** exception arises in original code because the algorithm tries to set binding for uninitialized `x`.
 4. The **TypeError** exception arises in obfuscated code because the algorithm tries to change the value of an immuatble binding `x` (class name).
@@ -30,20 +30,9 @@ Evaluation of `class x { static { const x = { x } = 0 ; } }` is done by followin
 
 *ClassDeclaration* : **class** *BindingIdentifier* *ClassTail*
 
-The algorithm calls BindingClassDeclarationEvaluation of this *ClassDeclaration*.
-
-<img src="./obs_img/obs_1.png" width="500px" title="Evaluation of ClassDeclaration"/>
-
-
 ### #2. Operation BindingClassDeclarationEvaluation of ECMAScript Specification 
 
-*ClassDeclaration* : **class** *BindingIdentifier* *ClassTail*
-
-In step 2, the algorithm calls ClassDefinitionEvaluation of *ClassTail* with arguments className and className.
-
-<img src="./obs_img/obs_2.png" width="500px" title="Operation BindingClassDeclarationEvaluation"/>
-
-### #3. Operation ClassDefinitionEvaluation of ECMAScript Speicifcation
+### #3. Operation ClassDefinitionEvaluation of ECMAScript Specifcation
 
 In step 2 and 3, the algorithm creates a new declarative environment called `classEnv` and creates immutable binding of `x`.
 
@@ -59,30 +48,15 @@ In step 31-b, the algorithm calls `Call` with arguments elementRecord.[[BodyFunc
 
 ### #4. Operation Call of the ECMAScript Specification
 
-In step 3, the algorithm calls `F.[[Call]](V, argumentsList)`, where *F* represents the `const x = { x } = 0 ;`, *V* represents the evaluation result of *ClassDefintion* of x, and *argumentsList* is an empty List.
-
-<img src="./obs_img/obs_6.png" width="500px" title="Operation Call"/>
-
 ### #5. Operation FunctionObject.[[Call]] of the ECMAScript specification.
-
-In step 6, the algorithm calls OrdinaryCallEvaluateBody(F, argumentList), where F represents the `const x = { x } = 0 ;` and *argumentsList* is an empty List.
-
-<img src="./obs_img/obs_7.png" width="500px" title="Operation FunctionObject.[[Call]]"/>
 
 ### #6. Operation OrdinaryCallEvaluateBody of the ECMAScript specification.
 
-The algorithm calls EvaluateBody of F.[[ECMAScriptCode]] with arguments F and argumentList, where F represents the `const x = { x } = 0 ;` and *argumentsList* is an empty List.
-
-
-<img src="./obs_img/obs_8.png" width="500px" title="Operation OrdinaryCallEvaluateBody"/>
-
 ### #7. Operation ClassStaticBlockBody.EvaluateBody of the ECMAScript specification.
 
-The algorithm calls EvaluateClassStaticBlockBody of ClassStaticBlockBody with argument functionObject, where functionObject represents the `const x = { x } = 0 ;`.
-
-<img src="./obs_img/obs_9.png" width="500px" title="Operation ClassStaticBlockBody.EvaluateBody"/>
-
 ### #8. Operation ClassStaticBlockBody.EvaluateClassStaticBlockBody of the ECMAScript specification.
+
+This step evaluates the ClassStaticBlockBody, which represents `const x = { x } = 0 ;` and creates binding of variables in ClassStaticBlockBody in class environment.
 
 In step 1, the algorithm calls `FunctionDeclarationInstantiation(functionObject, <<>>)`, where functionObject represents the `const x = { x } = 0 ;`.
 This step creates binding of `x`, which represents the constant variable name `const x`, which is **not initialized** at this point.
@@ -103,7 +77,7 @@ In step 4, the algorithm calls the evaluation of *Initializer*.
 
 ### #10. Evaluation of *AssignmentExpression* in ECMAScript specification.
 
-*AssignementExpression* represents `{x} = 0`, and it can be divided into *LeftHandSideExpression* `{x}` and *AssignmentExpression* `0`.
+*AssignmentExpression* represents `{x} = 0`, and it can be divided into *LeftHandSideExpression* `{x}` and *AssignmentExpression* `0`.
 
 In step 5, the algorithm calls DestructuringAssignmentEvaluation of assignmentPattern with argument rval, where rval represents 0 and assignmentPattern represents `{x}`.
 
@@ -111,7 +85,7 @@ In step 5, the algorithm calls DestructuringAssignmentEvaluation of assignmentPa
 
 ### #11. Operation ObjectAssignmentPattern.DestructuringAssignment in ECMAScript specification.
 
-*ObjectAssignemntPattern* represents `{x}` and it can be interpreted into *AssignmentPropertyList* `x`.
+*ObjectAssignmentPattern* represents `{x}` and it can be interpreted into *AssignmentPropertyList* `x`.
 
 In step 2, the algorithm calls PropertyDestructuringAssignmentEvaluation of AssignmentPropertyList with argument value, where value represents 0.
 
@@ -143,7 +117,7 @@ In detail, the `x` in envRec refers the `x` in `const x`. Therefore, it has not 
 
 <img src="./obs_img/obs_16.png" width="500px" title="Operation SetMutableBinding"/>
 
-In short, in #9, the evaluation of LexicalBinding, the algorithm evaluates AssignmentExpression `{x}=0` to initalize the value of the constant variable `x`. However, while evaluating `{x}=0`, in #12, the algorithm resolves the `x` in the AssignmentExpression as the constant variable `x` and tries to assign value. Then, **ReferenceError** occurs in # 14, because the constant variable `x` has not been initialized yet.
+In short, in #9, the evaluation of LexicalBinding, the algorithm evaluates AssignmentExpression `{x}=0` to initialize the value of the constant variable `x`. However, while evaluating `{x}=0`, in #12, the algorithm resolves the `x` in the AssignmentExpression as the constant variable `x` and tries to assign value. Then, **ReferenceError** occurs in # 14, because the constant variable `x` has not been initialized yet.
 
 * * *
 
@@ -168,8 +142,6 @@ In step 2, lref represents the class `x`.
 
 In step 5, the algorithm calls PutValue(lref, v), where lref represents a reference of the class `x` and v represents *undefined* value.
 
-<img src="./obs_img/obs_14.png" width="500px" title="Operation AssignmentProperty.PropertyDestructuringAssignmentEvaluation"/>
-
 ### #14. Operation SetMutableBinding in ECMAScript specification.
 
 In step 5-b, the algorithm throws a **TypeError** exception, because the binding for N, which is `x` in envRec is an immutable binding.
@@ -177,5 +149,3 @@ In step 5-b, the algorithm throws a **TypeError** exception, because the binding
 Since this is an attempt to change the value of an immuatble binding, the algorithm throws **TypeError** exception.
 
 In detail, the `x` in envRec refers the `x` in `class x`.
-
-<img src="./obs_img/obs_16.png" width="500px" title="Operation SetMutableBinding"/>
