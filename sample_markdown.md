@@ -61,7 +61,7 @@ Below is a detailed explanation using ECMAScript specification.
 
 Evaluation of `class x { static { const x = { x } = 0 ; } }` is done by following algorithms.
 
-## 1. [Operation ClassDefinitionEvaluation of ECMAScript specification](https://tc39.es/ecma262/#sec-runtime-semantics-classdefinitionevaluation)
+### 1. [Operation ClassDefinitionEvaluation of ECMAScript specification](https://tc39.es/ecma262/#sec-runtime-semantics-classdefinitionevaluation)
 
 In step 3, the algorithm creates an immutable binding of `x`.
 
@@ -75,7 +75,7 @@ where _initializer_ represents the `const x = { x } = 0 ;` and _receiver_ repres
 
 <img width="700" alt="obs_5" src="https://user-images.githubusercontent.com/48983829/213086687-58a74cba-1edd-4e2e-90c2-4c2972df3896.png">
 
-## 2. [Operation ClassStaticBlockBody.EvaluateClassStaticBlockBody of the ECMAScript specification](https://tc39.es/ecma262/#sec-runtime-semantics-evaluateclassstaticblockbody)
+### 2. [Operation ClassStaticBlockBody.EvaluateClassStaticBlockBody of the ECMAScript specification](https://tc39.es/ecma262/#sec-runtime-semantics-evaluateclassstaticblockbody)
 
 This step evaluates the _ClassStaticBlockBody_, which represents `const x = { x } = 0 ;` and creates binding of variables in _ClassStaticBlockBody_ in class environment.
 
@@ -87,7 +87,7 @@ In step 2, the algorithm calls the evaluation of *ClassStaticBlockStatementList*
 <img width="700" alt="obs_10" src="https://user-images.githubusercontent.com/48983829/213089286-e051a9cf-8676-485d-80bc-46a22ec175ba.png">
 
 
-## 3. [Evaluation of _LexicalBinding_ in ECMAScript specification](https://tc39.es/ecma262/#sec-let-and-const-declarations-runtime-semantics-evaluation)
+### 3. [Evaluation of _LexicalBinding_ in ECMAScript specification](https://tc39.es/ecma262/#sec-let-and-const-declarations-runtime-semantics-evaluation)
 *LexicalBinding* represents `x = {x} = 0`, and it can be divided into *BindingIdentifier* `x` and *Initializer* `= {x} = 0`.
 
 This algorithm intends to resolve *bindingId* and evaluate *Initializer* to initialize binding at step 5.
@@ -98,7 +98,7 @@ In step 4, the algorithm calls the evaluation of *Initializer*.
 
 <img width="700" alt="obs_11" src="https://user-images.githubusercontent.com/48983829/213089312-ca97f6bc-9ba8-499e-b3a5-b70b3fd0461a.png">
 
-## 4. [Evaluation of _AssignmentExpression_ in ECMAScript specification](https://tc39.es/ecma262/#sec-assignment-operators-runtime-semantics-evaluation)
+### 4. [Evaluation of _AssignmentExpression_ in ECMAScript specification](https://tc39.es/ecma262/#sec-assignment-operators-runtime-semantics-evaluation)
 
 *AssignmentExpression* represents `{x} = 0`, and it can be divided into *LeftHandSideExpression* `{x}` and *AssignmentExpression* `0`.
 
@@ -108,7 +108,7 @@ In step 5, the algorithm calls **DestructuringAssignmentEvaluation**_(value)_ of
 
 Then, **DestructuringAssignmentEvaluation** calls **PropertyDestructuringAssignmentEvaluation**_(value)_, where _value_ represents 0.
 
-## 5. [Operation AssignmentProperty.PropertyDestructuringAssignmentEvaluation in ECMASCript specification](https://tc39.es/ecma262/#sec-runtime-semantics-propertydestructuringassignmentevaluation)
+### 5. [Operation AssignmentProperty.PropertyDestructuringAssignmentEvaluation in ECMASCript specification](https://tc39.es/ecma262/#sec-runtime-semantics-propertydestructuringassignmentevaluation)
 
 In step 2, the algorithm resolves `x` as the constant variable `x`.
 
@@ -118,7 +118,7 @@ In step 5, the algorithm calls **PutValue**_(V, W)_, where _V_ represents a refe
 
 Then, **PutValue** calls **SetMutableBinding**_(N, V, S)_ of _base_, where _base_ represents the environment that binding of constant variable `x` is stored, _N_ represents `x`, _V_ represents `undefined`, and _S_ represents `True`.
 
-## 6. [Operation SetMutableBinding in ECMAScript specification](https://tc39.es/ecma262/#sec-declarative-environment-records-setmutablebinding-n-v-s)
+### 6. [Operation SetMutableBinding in ECMAScript specification](https://tc39.es/ecma262/#sec-declarative-environment-records-setmutablebinding-n-v-s)
 
 In step 3, the algorithm throws a **ReferenceError** exception, because the binding for N, which is `x` in envRec has not yet been initialized.
 
@@ -129,7 +129,7 @@ In detail, the `x` in envRec refers the `x` in `const x`. Therefore, it has not 
 ---
 In comparison, the evaluation of the obfuscated JavaScript program, `class x{static{const _0x2340e4={x}=0x0;}}`, is similar but different in following steps.
 
-## 2. [Operation ClassStaticBlockBody.EvaluateClassStaticBlockBody of the ECMAScript specification](https://tc39.es/ecma262/#sec-runtime-semantics-evaluateclassstaticblockbody)
+### 2. [Operation ClassStaticBlockBody.EvaluateClassStaticBlockBody of the ECMAScript specification](https://tc39.es/ecma262/#sec-runtime-semantics-evaluateclassstaticblockbody)
 
 In step 1, the algorithm creates an immutable binding of `_0x2340e4` in class environment.
 
@@ -138,7 +138,7 @@ In step 2, the algorithm calls the evaluation of *ClassStaticBlockStatementList*
 <img width="700" alt="obs_10" src="https://user-images.githubusercontent.com/48983829/213089286-e051a9cf-8676-485d-80bc-46a22ec175ba.png">
 
 
-## 5. [Operation AssignmentProperty.PropertyDestructuringAssignmentEvaluation in ECMASCript specification](https://tc39.es/ecma262/#sec-runtime-semantics-propertydestructuringassignmentevaluation)
+### 5. [Operation AssignmentProperty.PropertyDestructuringAssignmentEvaluation in ECMASCript specification](https://tc39.es/ecma262/#sec-runtime-semantics-propertydestructuringassignmentevaluation)
 
 In step 2, the algorithm resolves `x` as the class `x`.
 
@@ -148,7 +148,7 @@ In step 5, the algorithm calls **PutValue**_(V, W)_, where _V_ represents a refe
 
 Then, **PutValue** calls **SetMutableBinding**_(N, V, S)_ of _base_, where _base_ represents the environment that binding of class `x` is stored.
 
-## 6. [Operation SetMutableBinding in ECMAScript specification](https://tc39.es/ecma262/#sec-declarative-environment-records-setmutablebinding-n-v-s)
+### 6. [Operation SetMutableBinding in ECMAScript specification](https://tc39.es/ecma262/#sec-declarative-environment-records-setmutablebinding-n-v-s)
 
 In step 5-b, the algorithm throws a **TypeError** exception, because the binding for `x` in envRec is an immutable binding (class binding).
 
