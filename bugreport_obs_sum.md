@@ -26,12 +26,6 @@ Evaluation of `class x { static { const x = { x } = 0 ; } }` is done by followin
 
 ## Evaluation of `class x { static { const x = { x } = 0 ; } }`
 
-### #1. Evaluation of *ClassDeclaration* of ECMAScript Specification
-
-*ClassDeclaration* : **class** *BindingIdentifier* *ClassTail*
-
-### #2. Operation BindingClassDeclarationEvaluation of ECMAScript Specification 
-
 ### #3. Operation ClassDefinitionEvaluation of ECMAScript Specifcation
 
 In step 2 and 3, the algorithm creates a new declarative environment called `classEnv` and creates immutable binding of `x`.
@@ -45,14 +39,6 @@ In step 27, the algorithm initializes the binding of `x` with `F`, which is the 
 In step 31-b, the algorithm calls `Call` with arguments elementRecord.[[BodyFunction]] and F, where elementRecord.[[BodyFunction]] represents the `const x = { x } = 0 ;` and F represents the evaluation result of *ClassDefinition* of x.
 
 <img src="./obs_img/obs_5.png" width="500px" title="Operation ClassDefinitionEvalution (3)"/>
-
-### #4. Operation Call of the ECMAScript Specification
-
-### #5. Operation FunctionObject.[[Call]] of the ECMAScript specification.
-
-### #6. Operation OrdinaryCallEvaluateBody of the ECMAScript specification.
-
-### #7. Operation ClassStaticBlockBody.EvaluateBody of the ECMAScript specification.
 
 ### #8. Operation ClassStaticBlockBody.EvaluateClassStaticBlockBody of the ECMAScript specification.
 
